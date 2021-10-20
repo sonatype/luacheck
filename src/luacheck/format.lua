@@ -1,5 +1,6 @@
 local stages = require "luacheck.stages"
 local utils = require "luacheck.utils"
+local json = require "rxi-json-lua"
 
 local format = {}
 
@@ -313,6 +314,37 @@ function format.builtin_formatters.plain(report, file_names, opts)
    end
 
    return table.concat(buf, "\n")
+end
+
+function format.builtin_formatters.json(report, file_names)
+    local buf = {}
+    local k = 1
+    for i, file_report in ipairs(report) do
+        if file_report.fatal then
+            buf[k] = { ["file"] = file_names[i]
+                     , ["type"] = "Fatal Lua issue"
+                     , ["message"] = file_report.msg
+                     , ["line"] = 0
+                     , ["details_url"] = "https://luacheck.readthedocs.io/en/stable/warnings.html"
+                 }
+            k = k + 1
+        else
+            for i, event in ipairs(file_report) do
+               -- Older documentation on the format suggests that it could support column range.
+               -- Newer docs don't mention it. Don't use it for now.
+               -- local event_type = event.code:sub(1, 1) == "0" and "error" or "warning"
+               local message = format_message(event)
+               buf[k] = { ["file"] = file_names[i]
+                        , ["type"] = event_code(event)
+                        , ["message"] = message
+                        , ["line"] = event.line
+                        , ["details_url"] = "https://luacheck.readthedocs.io/en/stable/warnings.html"
+                    }
+                k = k + 1
+            end
+        end
+    end
+    return json.encode(buf)
 end
 
 --- Formats a report.

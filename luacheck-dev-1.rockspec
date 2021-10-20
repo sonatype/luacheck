@@ -14,9 +14,10 @@ a few other typical problems within Lua programs.
    license = "MIT"
 }
 dependencies = {
-   "lua >= 5.1, < 5.4",
+   "lua >= 5.1, < 5.5",
    "argparse >= 0.6.0",
-   "luafilesystem >= 1.6.3"
+   "luafilesystem >= 1.6.3",
+   "rxi-json-lua > 0"
 }
 build = {
    type = "builtin",
