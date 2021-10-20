@@ -329,7 +329,7 @@ function format.builtin_formatters.json(report, file_names)
                  }
             k = k + 1
         else
-            for i, event in ipairs(file_report) do
+            for _, event in ipairs(file_report) do
                -- Older documentation on the format suggests that it could support column range.
                -- Newer docs don't mention it. Don't use it for now.
                -- local event_type = event.code:sub(1, 1) == "0" and "error" or "warning"
